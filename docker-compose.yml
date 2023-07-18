@@ -1,0 +1,67 @@
+version: "3.8"
+services:
+  web:
+    build:
+      context: docker
+      dockerfile: nginx/Dockerfile
+    ports:
+      - "8808:80"
+    volumes:
+      - ./project:/app
+
+  php-fpm:
+    build:
+      context: docker
+      dockerfile: php-fpm/Dockerfile
+    environment:
+      APP_ENV: local
+      APP_DEBUG: 1
+      PHP_IDE_CONFIG: serverName=API
+
+      DB_HOST: db
+      DB_USER: mi
+      DB_PASS: test
+      DB_NAME: mi
+
+      REDIS_HOST: redis
+    volumes:
+      - ./project:/app
+
+  php-cli:
+    build:
+      context: docker
+      dockerfile: php-cli/Dockerfile
+    environment:
+      APP_ENV: local
+      APP_DEBUG: 1
+
+      DB_HOST: db
+      DB_USER: mi
+      DB_PASS: test
+      DB_NAME: mi
+
+      REDIS_HOST: redis
+
+    volumes:
+      - ./project:/app
+
+  db:
+    image: mariadb:10.5
+    restart: always
+    environment:
+      MYSQL_DATABASE: mi
+      MYSQL_USER: mi
+      MYSQL_PASSWORD: test
+      MYSQL_ROOT_PASSWORD: test
+    command: [ '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
+    volumes:
+      - ./data/db/maria:/var/lib/mysql
+    ports:
+      - "3307:3306"
+
+  redis:
+    image: "redis:alpine"
+    command: redis-server --save 20 1 --loglevel warning
+    restart: always
+    volumes:
+      - ./data/db/redis:/data
