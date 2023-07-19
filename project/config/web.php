@@ -1,15 +1,28 @@
 <?php
 
+use app\services\Equipment\RentEquipmentService;
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
+    'language' => 'ru-Ru',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+    ],
+    'modules' => [
+        'axo' => [
+            'class' => 'app\modules\Axo\AxoModule',
+        ],
+    ],
+    'container' => [
+        'singletons' => [
+            RentEquipmentService::class => RentEquipmentService::class
+        ]
     ],
     'components' => [
         'request' => [
@@ -28,7 +41,7 @@ $config = [
             'class' => 'yii\rbac\DbManager',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\User\User',
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
