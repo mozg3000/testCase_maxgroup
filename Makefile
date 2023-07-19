@@ -1,3 +1,4 @@
+init: build install rbac migration dirs permission
 pull:
 	docker-compose pull
 build:
@@ -16,3 +17,10 @@ install:
 	docker-compose run php-cli composer install
 rbac:
 	docker-compose run php-cli php yii migrate --migrationPath=@yii/rbac/migrations
+migration:
+	docker-compose run php-cli php yii migrate
+dirs:
+	docker-compose run --rm php-cli mkdir runtime/logs
+permission:
+	docker-compose run --rm php-cli chmod -R 777 web runtime modules views models controllers migrations
+
