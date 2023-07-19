@@ -32,8 +32,20 @@ class EquipmentSearch extends Equipment
 
         $this->load($params);
 
-        $dataProvider = new ActiveDataProvider();
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
 
         return $dataProvider;
+    }
+
+    public function getColumns()
+    {
+        return [
+            [
+                'label' => 'Название',
+                'attribute' => 'name'
+            ]
+        ];
     }
 }
